@@ -1,0 +1,23 @@
+Readme on DOM Level 2 Simple implementation
+===========================================
+
+Introduction
+------------
+
+This is a simplified version of the W3C DOM Level 2 core specification. The main objective of this implementation is to be able to use base functionality of Nodes and the tree like structure. It does not implement the full functionality and all classes defined in the DOM Specification, only what is minimally required for basic usage of DOM.
+
+Supported functionality
+-----------------------
+
+The following interfaces have been implemented:
+
+* Attr interface fully implemented
+* NamedNodeMap+ interface fully implemented
+* Document interface minimal implementation only to create Element and Attr nodes 
+* Element interface mostly functionally complete with missing getElementsByTagName, iD attribute methods as well getSchemaTypeInfo methods.
+* Node interface partially implemented, see code for details
+* NodeList interface fully implemented
+* TypeInfo interface minimally implemented and not really functional
+
+
+Aditionally some DOM conversion utilities outside of the DOM Core specification is also available in the DOMUtilities class as well XPath utilities in the XPathGen class.
