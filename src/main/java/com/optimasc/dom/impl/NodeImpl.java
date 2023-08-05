@@ -10,17 +10,17 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.UserDataHandler;
 
 /**
- * Basic node implementation with the following constraints: <li>
- * <ul>
- * Does not support children nodes.
- * </ul>
- * <ul>
- * Does not support node values
- * </ul>
- * <ul>
- * Does not support attributes
- * </ul>
+ * Basic node implementation with the following constraints: <ul>
+ * <li>
+ *  Does not support children nodes.
  * </li>
+ * <li>
+ * Does not support node values
+ * </li>
+ * <li>
+ * Does not support attributes
+ * </li>
+ * </ul>
  *
  *
  * @author Carl Eric Codere
