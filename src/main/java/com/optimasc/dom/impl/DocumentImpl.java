@@ -5,7 +5,6 @@ import java.util.Hashtable;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
-import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -13,258 +12,648 @@ import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.EntityReference;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 
+/** Partial Implementation of Document node interface. The following API's are implemented 
+ *  and are valid on Document nodes:
+ * 
+ * <table>
+  <tr>
+    <th>Method</th>
+    <th>Interface</th>
+    <th>W3C DOM</th>
+    <th>JSR 280</th>
+    <th>JSR 287</th>
+    <th>Implemented</th>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#adoptNode(Node)}</td>
+    <td>Document</td>
+    <td>DOM 3</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#appendChild(Node)}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#cloneNode(boolean)}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#createAttributeNS(String, String)}</td>
+    <td>Document</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#createElementNS(String, String)}</td>
+    <td>Document</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getChildNodes()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#getDocumentElement()}</td>
+    <td>Document</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#getDocumentURI()}</td>
+    <td>Document</td>
+    <td>DOM 3</td>
+    <td align="center">FALSE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#getElementById(String)}</td>
+    <td>Document</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#getElementsByTagName(String)}</td>
+    <td>Document</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#getElementsByTagNameNS(String, localName)}</td>
+    <td>Document</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getFirstChild()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getLastChild()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getNodeName()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getNodeType()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getOwnerDocument()}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getParentNode()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#getStrictErrorChecking()}</td>
+    <td>Document</td>
+    <td>DOM 3</td>
+    <td align="center">FALSE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getUserData(String)}</td>
+    <td>Node</td>
+    <td>DOM 3</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#hasChildNodes()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#importNode(Node, boolean)}</td>
+    <td>Document</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#insertBefore(Node, Node)}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#isSameNode(Node)}</td>
+    <td>Node</td>
+    <td>DOM 3</td>
+    <td align="center">FALSE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#removeChild(Node)}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#replaceChild(Node, Node)}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Document#setDocumentURI(String)}</td>
+    <td>Document</td>
+    <td>DOM 3</td>
+    <td align="center">FALSE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+</table>
+
+ * 
+ * @author carl
+ *
+ */
 public class DocumentImpl extends NodeImpl implements Document
 {
   protected String       documentURI;
-  protected Hashtable<String,Object> featureObjects;
+  protected DocumentType documentType;
+  protected Element      rootElement;
+  protected Hashtable/*<String,Object>*/ featureObjects;
 
-  public DocumentImpl(Document owner, String name)
+  public DocumentImpl()
   {
-    super(owner, name, Node.DOCUMENT_NODE);
-    featureObjects = new Hashtable<String,Object>(4);
+    super(null, "#document", Node.DOCUMENT_NODE);
+    featureObjects = new Hashtable/*<String,Object>*/(4);
+  }
+  
+  private Node importNodeInternal(Node source, boolean deep)
+  throws DOMException 
+  {
+   Node newnode=null;
+
+  if(source instanceof NodeImpl)
+  {
+      int type = source.getNodeType();
+      switch (type) {
+          case ELEMENT_NODE: 
+          {
+              Element newElement;
+              newElement = createElementNS(source.getNamespaceURI(),source.getNodeName());
+
+              // Copy element's attributes, if any.
+              NamedNodeMap sourceAttrs = source.getAttributes();
+              if (sourceAttrs != null) 
+              {
+                  int length = sourceAttrs.getLength();
+                  for (int index = 0; index < length; index++) 
+                  {
+                      Attr attr = (Attr)sourceAttrs.item(index);
+
+                      if (attr.getSpecified()) 
+                      {
+                          Attr newAttr = (Attr)importNode(attr, true);
+                          newElement.setAttributeNodeNS(newAttr);
+                      }
+                  }
+              }
+
+              newnode = newElement;
+              break;
+          }
+
+          case ATTRIBUTE_NODE: 
+          {
+              newnode = createAttributeNS(source.getNamespaceURI(),source.getNodeName());
+              Attr attr = (Attr) source;
+              Attr newattr = (Attr) newnode;
+              newattr.setValue(attr.getValue());
+              deep = false;
+              break;
+          }
+
+          case TEXT_NODE: 
+          {
+              newnode = createTextNode(source.getNodeValue());
+              break;
+          }
+
+          case PROCESSING_INSTRUCTION_NODE: 
+          {
+              newnode = createProcessingInstruction(source.getNodeName(),
+              source.getNodeValue());
+              break;
+          }
+
+          case COMMENT_NODE: 
+          {
+              newnode = createComment(source.getNodeValue());
+              break;
+          }
+
+          // Cannot import document type nodes
+          case DOCUMENT_TYPE_NODE: 
+          case DOCUMENT_NODE : // Can't import document nodes
+          default: {           // Unknown node type
+              throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "importNode on this node type is not supported :"+nodeType);
+          }
+      }
+
+      // If deep, replicate and attach the kids.
+      if (deep) 
+      {
+          NodeList children = source.getChildNodes();
+          for (int i=0; i < children.getLength(); i++)
+          {
+            newnode.appendChild(importNode(children.item(i), true));
+          }
+      }
+      return newnode;
+  }
+    return null;    
+  } 
+  
+  
+  protected Node adoptNode(Node source, boolean deep)  throws DOMException
+  {
+    NodeImpl node;
+    try {
+        node = (NodeImpl) source;
+    } catch (ClassCastException e) {
+        return null;
+    }
+    
+    
+    // Return null if the source is null
+    if (source == null) {
+        return null;
+    } 
+    else if (source != null && source.getOwnerDocument() != null) 
+    {
+        DOMImplementation thisImpl = this.getImplementation();
+        DOMImplementation otherImpl = source.getOwnerDocument().getImplementation();
+
+        // when the source node comes from a different implementation.
+        if (thisImpl != otherImpl) 
+        {
+            // Adopting between two different implementations is not possible
+            return null;  
+        }
+    }
+    
+    
+    if (node.readOnly)
+    {
+      throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR,"Node is read-only.");
+    }
+    
+    
+    switch (node.getNodeType()) 
+    {
+        case ATTRIBUTE_NODE: 
+        {
+            AttrImpl attr = (AttrImpl) node;
+            attr.ownerElement = null;
+            attr.isSpecified = true;
+            attr.ownerDocument = this;
+            break;
+        }
+        case DOCUMENT_NODE:
+        case DOCUMENT_TYPE_NODE: 
+        {
+            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Document and DocumentType nodes cannot be adopted.");
+        }
+        // ELEMENT Nodes
+        default: 
+        {
+          // Remove this element from the tree.
+            Node parent = node.getParentNode();
+            if (parent != null) 
+            {
+                parent.removeChild(source);
+            }
+            node.ownerDocument = this;
+            // Recursively set new owner of the children of this node
+            DOMUtilities.setOwnerDocument(node,this);
+            // Only keep specified attributes, all FIXED attributes are removed
+            NamedNodeMap namedNodeList = node.getAttributes();
+            // Finished the operation
+            if (namedNodeList == null)
+               break;
+            // Indicate indicates that will need to be removed.
+            Attr toRemove[] = new Attr[namedNodeList.getLength()];
+            for (int i=0; i < toRemove.length; i++)
+            {
+              Attr attr = (Attr) namedNodeList.item(i);
+              if (attr.getSpecified()==false)
+              {
+                toRemove[i] = attr;
+              }
+            }
+            for (int i=0; i < toRemove.length; i++)
+            {
+              if (toRemove[i]!=null)
+              {
+                ((Element)node).removeAttributeNode(toRemove[i]);
+              }
+            }
+            toRemove = null;
+            break;
+        }
+    }
+
+    return node;
   }
 
-  public DocumentImpl(Document owner)
-  {
-    super(owner, "#document", Node.DOCUMENT_NODE);
-    featureObjects = new Hashtable<String,Object>(4);
-  }
-
-
-  @Override
   public Node adoptNode(Node source) throws DOMException
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    return adoptNode(source,true);
   }
 
-
-  @Override
   public Attr createAttribute(String name) throws DOMException
   {
-    return new AttrImpl(this, name);
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public Attr createAttributeNS(String namespaceURI, String qualifiedName)  throws DOMException
   {
+    if (DOMUtilities.isValidName(qualifiedName)==false)
+    {
+      throw new DOMException(DOMException.INVALID_CHARACTER_ERR,"Qualified name contains invalid characters: '"+qualifiedName+"'");
+    }
+    DOMUtilities.validateQualifiedName(namespaceURI, qualifiedName);
     return new AttrImpl(this, namespaceURI, qualifiedName);
   }
 
-
-
-  @Override
   public CDATASection createCDATASection(String data) throws DOMException
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public Comment createComment(String data)
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public DocumentFragment createDocumentFragment()
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public Element createElement(String tagName) throws DOMException
   {
-    return new ElementNodeImpl(this, tagName);
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public Element createElementNS(String namespaceURI, String qualifiedName) throws DOMException
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    if (DOMUtilities.isValidName(qualifiedName)==false)
+    {
+      throw new DOMException(DOMException.INVALID_CHARACTER_ERR,"Qualified name contains invalid characters: '"+qualifiedName+"'");
+    }
+    DOMUtilities.validateQualifiedName(namespaceURI, qualifiedName);
+    return new ElementNodeImpl(this, namespaceURI,qualifiedName);
   }
 
-  @Override
   public EntityReference createEntityReference(String name) throws DOMException
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public ProcessingInstruction createProcessingInstruction(String target, String data)
       throws DOMException
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public Text createTextNode(String data)
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public DocumentType getDoctype()
   {
-    // TODO Auto-generated method stub
-    return null;
+    return documentType;
   }
 
-  @Override
   public Element getDocumentElement()
   {
-    // TODO Auto-generated method stub
-    return null;
+    return rootElement;
   }
 
-  @Override
   public String getDocumentURI()
   {
     return documentURI;
   }
 
-  @Override
-  public DOMConfiguration getDomConfig()
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public Element getElementById(String elementID)
   {
-    // TODO Auto-generated method stub
-    return null;
+    return DOMUtilities.getElementByID(rootElement,elementID);
   }
 
-  @Override
   public NodeList getElementsByTagName(String tagName)
   {
-    // TODO Auto-generated method stub
-    return null;
+    NodeListImpl elements = new NodeListImpl();
+    DOMUtilities.getElementsByNameNS(rootElement, null, tagName, elements);
+    return elements;
   }
 
-  @Override
   public NodeList getElementsByTagNameNS(String namespaceURI, String localName)
   {
-    // TODO Auto-generated method stub
-    return null;
+    NodeListImpl elements = new NodeListImpl();
+    DOMUtilities.getElementsByNameNS(rootElement, namespaceURI, localName, elements);
+    return elements;
   }
 
-  @Override
   public DOMImplementation getImplementation()
   {
     throw new DOMException(DOMException.NOT_SUPPORTED_ERR,"call getChildNodes() instead.");
   }
 
-  @Override
-  public String getInputEncoding()
-  {
-    return null;
-  }
-
-  @Override
   public Document getOwnerDocument()
   {
     return this;
   }
 
-  @Override
   public Node getParentNode()
   {
     return null;
   }
 
-  @Override
   public boolean getStrictErrorChecking()
   {
     return true;
   }
 
-  @Override
-  public String getXmlEncoding()
-  {
-    return null;
-  }
-
-  @Override
-  public boolean getXmlStandalone()
-  {
-    return false;
-  }
-
-  @Override
-  public String getXmlVersion()
-  {
-    return null;
-  }
-
-  @Override
   public boolean hasAttributes()
   {
     return false;
   }
 
 
-  @Override
-  public Node importNode(Node importNode, boolean deep) throws DOMException
+  public Node importNode(Node importedNode, boolean deep) throws DOMException
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    return importNodeInternal(importedNode,deep);
   }
 
-  @Override
   public void normalizeDocument()
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public void setDocumentURI(String documentURI)
   {
     this.documentURI = documentURI;
   }
 
-  @Override
   public void setStrictErrorChecking(boolean strictErrorChecking)
   {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
-  public void setXmlStandalone(boolean xmlStandAlone) throws DOMException
-  {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
-  }
 
-  @Override
-  public void setXmlVersion(String xmlVersion) throws DOMException
-  {
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
-  }
-
-  @Override
   public Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException
   {
-/*    if ((n instanceof Element) || (n instanceof Attr))
-    {
-
-    }*/
-    throw new DOMException(DOMException.NOT_FOUND_ERR,"Unsupported feature");
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
   public boolean isSupported(String feature, String version)
   {
     return featureObjects.containsKey(feature);
   }
 
-  @Override
   public Object getFeature(String feature, String version)
   {
     return featureObjects.get(feature);
   }
+
+  public Node appendChild(Node newChild) throws DOMException
+  {
+    // Check if trying to append a new DocumentType
+    if ((newChild instanceof DocumentType) && (documentType!=null))
+    {
+      throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR,"Trying to append a DocumentType while this document already has a DocumentType");
+    }
+    
+    // Check if trying to append a new DocumentType
+    if (newChild instanceof Element)
+    {
+      if (rootElement!=null)
+      {
+        throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR,"Trying to append a new root Element while this document already has a root Element");
+      }
+    }
+ 
+    Node returnNode = super.appendChild(newChild);;
+    // Successfully added this node, so assign it.
+    if (newChild instanceof Element)
+    {
+      rootElement = (Element) newChild;
+    }
+    // Successfully added this node, so assign it.
+    if (newChild instanceof DocumentType)
+    {
+      documentType = (DocumentType) newChild;
+    }
+    
+    return returnNode;
+  }
+
+  public void setTextContent(String textContent) throws DOMException
+  {
+    throw UNSUPPORTED_OPERATION;
+  }
+
+  public Node insertBefore(Node newChild, Node refChild) throws DOMException
+  {
+    if (newChild instanceof DocumentType)
+    {
+      if (documentType != null)
+      {
+        throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR,"Trying to insert a DocumentType while it is already defined.");
+      }
+    }
+    if (newChild instanceof Element)
+    {
+      if (rootElement != null)
+      {
+        throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR,"Trying to insert an Element while it is already defined.");
+      }
+    }
+    
+    return appendChild(newChild);
+  }
+  
+  
 
 }

@@ -7,92 +7,391 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.TypeInfo;
 
+/** Implements a minimal subset of the W3C DOM Element API. This
+ *  Element node only permits to have at most one {@link Text} node 
+ *  as a child, as the Text nodes are internally created when
+ *  calling {@link #setTextContent(String)}, and it is not 
+ *  possible to append Text nodes manually.
+ * 
+ * <p>The following API's are implemented and are valid for Element nodes:</p>
+ * 
+ * <table>
+ * <tr>
+ *  <th>Method name</th>
+ *  <th>Interface</th>
+ *  <th>DOM Core Level</th>
+ *  <th>JSR 280</th>
+ *  <th>JSR 287</th>
+ *  <th>Implemented</th>
+ * </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#appendChild(Node)}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#cloneNode(boolean)}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#getAttributeNodeNS(String, String)}</td>
+    <td>Element</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#getAttributeNS(String, String)}</td>
+    <td>Element</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getAttributes()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getChildNodes()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#getElementsByTagName(String)}</td>
+    <td>Element</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#getElementsByTagNameNS(String, localName)}</td>
+    <td>Element</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getFirstChild()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getLastChild()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getLocalName()}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getNamespaceURI()}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getNextSibling()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getNodeName()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getNodeType()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getOwnerDocument()}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getParentNode()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getPrefix()}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getPreviousSibling()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#getTagName()}</td>
+    <td>Element</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getTextContent()}</td>
+    <td>Node</td>
+    <td>DOM 3</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#getUserData(String)}</td>
+    <td>Node</td>
+    <td>DOM 3</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#hasAttributeNS(String, String)}</td>
+    <td>Element</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#hasAttributes()}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#hasChildNodes()}</td>
+    <td>Node</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#insertBefore(Node, Node)}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#isSameNode(Node)}</td>
+    <td>Node</td>
+    <td>DOM 3</td>
+    <td align="center">FALSE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#removeAttributeNode(Attr)}</td>
+    <td>Element</td>
+    <td>DOM 1</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#removeAttributeNS(String, String)}</td>
+    <td>Element</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#removeChild(Node)}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#replaceChild(Node, Node)}</td>
+    <td>Node</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#setAttributeNodeNS(Attr)}</td>
+    <td>Element</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#setAttributeNS(String, String, String)}</td>
+    <td>Element</td>
+    <td>DOM 2</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#setIdAttributeNode(Attr, boolean)}</td>
+    <td>Element</td>
+    <td>DOM 3</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Element#setIdAttributeNS(String, String, boolean)}</td>
+    <td>Element</td>
+    <td>DOM 3</td>
+    <td align="center">TRUE</td>
+    <td align="center">FALSE</td>
+    <td align="center">TRUE</td>
+  </tr>
+  <tr>
+    <td>{@link org.w3c.dom.Node#setTextContent(String)}</td>
+    <td>Node</td>
+    <td>DOM 3</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+    <td align="center">TRUE</td>
+  </tr>
+</table>
+
+ * 
+ * 
+ *
+ */
 public class ElementNodeImpl extends NodeImpl implements Element
 {
-  protected NamedNodeMap attributes;
+  protected DefaultNamedNodeMap attributes;
 
-  public ElementNodeImpl(Document owner,String name)
+  
+  public ElementNodeImpl(Document owner,String namespaceURI, String qualifiedName)
   {
-    super(owner,name, Node.ELEMENT_NODE);
+    super(owner,namespaceURI, qualifiedName, Node.ELEMENT_NODE);
     attributes = new DefaultNamedNodeMap();
   }
 
-  @Override
-  public void setNodeValue(String nodeValue) throws DOMException
-  {
-    /* As specified by the specification, this is ignored for Element nodes */
-  }
-
-  @Override
-  public NamedNodeMap getAttributes()
-  {
-    return attributes;
-  }
-
-
-  @Override
-  public boolean hasAttributes()
-  {
-    return attributes.getLength()>0;
-  }
-
-  @Override
+  
   public String getTagName()
   {
     return nodeName;
   }
 
-  @Override
+  
   public String getAttribute(String name)
   {
-    Node node =  attributes.getNamedItem(name);
-    if (node == null)
-      return "";
-    return node.getNodeValue();
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
+  
   public void setAttribute(String name, String value) throws DOMException
   {
-    Attr attr = ownerDocument.createAttribute(name);
-    attr.setValue(value);
-    attributes.setNamedItem(attr);
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
+  
   public void removeAttribute(String name) throws DOMException
   {
-    attributes.removeNamedItem(name);
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
+  
   public Attr getAttributeNode(String name)
   {
-    return (Attr)attributes.getNamedItem(name);
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
+  
   public Attr setAttributeNode(Attr newAttr) throws DOMException
   {
-    return (Attr) attributes.setNamedItem(newAttr);
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
+  
   public Attr removeAttributeNode(Attr oldAttr) throws DOMException
   {
-    return (Attr) attributes.removeNamedItem(oldAttr.getName());
+    AttrImpl attr;
+    if (readOnly) 
+    {
+       throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
+    }
+    if (attributes.contains(oldAttr)==false)
+    {
+      throw new DOMException(DOMException.NOT_FOUND_ERR, "Attribute is not found.");
+    }
+    attr = (AttrImpl) attributes.removeNamedItemNS(oldAttr.getNamespaceURI(),oldAttr.getLocalName());
+    attr.ownerElement = null;
+    return attr;
   }
 
-  @Override
+  
   public NodeList getElementsByTagName(String name)
   {
-    // TODO Auto-generated method stub
-    return null;
+    NodeListImpl elements = new NodeListImpl();
+    DOMUtilities.getElementsByNameNS(this, null, name, elements);
+    return elements;
   }
 
-  @Override
+  
   public String getAttributeNS(String namespaceURI, String localName)
   {
     Node node = attributes.getNamedItemNS(namespaceURI, localName);
@@ -101,47 +400,75 @@ public class ElementNodeImpl extends NodeImpl implements Element
     return node.getNodeValue();
   }
 
-  @Override
+  
   public void setAttributeNS(String namespaceURI, String qualifiedName, String value)
       throws DOMException
   {
-    Attr attr = ownerDocument.createAttributeNS(namespaceURI, qualifiedName);
+    if (readOnly) 
+    {
+       throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
+    }
+    AttrImpl attr = (AttrImpl) ownerDocument.createAttributeNS(namespaceURI, qualifiedName);
+    attr.ownerElement = this;
     attr.setValue(value);
     attributes.setNamedItemNS(attr);
   }
 
-  @Override
+  
   public void removeAttributeNS(String namespaceURI, String localName) throws DOMException
   {
-    attributes.removeNamedItemNS(namespaceURI, localName);
+    AttrImpl attr;
+    if (readOnly) 
+    {
+       throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
+    }
+    attr = (AttrImpl) attributes.removeNamedItemNS(namespaceURI,localName);
+    if (attr != null)
+       attr.ownerElement = null;
   }
 
-  @Override
+  
   public Attr getAttributeNodeNS(String namespaceURI, String localName)
   {
     return (Attr) attributes.getNamedItemNS(namespaceURI, localName);
   }
 
-  @Override
+  
   public Attr setAttributeNodeNS(Attr newAttr) throws DOMException
   {
+    AttrImpl attr;
+    if (readOnly) 
+    {
+       throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
+    }
+    if (newAttr.getOwnerDocument()!=ownerDocument)
+    {
+      throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, "Attribute is not created using this Document instance.");
+    }
+    attr = (AttrImpl) newAttr;
+    if (attr.ownerElement!=null)
+    {
+      throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, "Attribute is already owned by another Element, clone it to add.");
+    }
+    attr.ownerElement = this;
     return (Attr) attributes.setNamedItemNS(newAttr);
   }
 
-  @Override
+  
   public NodeList getElementsByTagNameNS(String namespaceURI, String localName)
   {
-    // TODO Auto-generated method stub
-    return null;
+    NodeListImpl elements = new NodeListImpl();
+    DOMUtilities.getElementsByNameNS(this, namespaceURI, localName, elements);
+    return elements;
   }
 
-  @Override
+  
   public boolean hasAttribute(String name)
   {
-    return attributes.getLength()>0;
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
+  
   public boolean hasAttributeNS(String namespaceURI, String localName)
   {
     Node node = attributes.getNamedItemNS(namespaceURI, localName);
@@ -150,35 +477,48 @@ public class ElementNodeImpl extends NodeImpl implements Element
     return false;
   }
 
-  @Override
-  public TypeInfo getSchemaTypeInfo()
+  
+  public void setIdAttribute(String name, boolean isID) throws DOMException
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw UNSUPPORTED_OPERATION;
   }
 
-  @Override
-  public void setIdAttribute(String arg0, boolean arg1) throws DOMException
+  
+  public void setIdAttributeNS(String namespaceURI, String localName, boolean isID) throws DOMException
   {
-    // TODO Auto-generated method stub
-
+    if (readOnly)
+    {
+       throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
+    }
+    
+    AttrImpl attr = (AttrImpl)attributes.getNamedItemNS(namespaceURI, localName);
+    if (attr != null)
+    {
+      if (attr.readOnly)
+      {
+         throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Attribute is read-only");
+      }    
+      attr.isID = isID;
+    } else
+    {
+      throw new DOMException(DOMException.NOT_FOUND_ERR,"Attribute not found.");
+    }
   }
 
-  @Override
-  public void setIdAttributeNS(String arg0, String arg1, boolean arg2) throws DOMException
+  public void setIdAttributeNode(Attr attr, boolean isID) throws DOMException
   {
-    // TODO Auto-generated method stub
-
+    if (readOnly)
+    {
+       throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
+    }
+    if (attributes.contains(attr)==false)
+    {
+      throw new DOMException(DOMException.NOT_FOUND_ERR, "Attribute is not an attribute of this Node");
+    }
+    ((AttrImpl)attr).isID = isID;  
   }
 
-  @Override
-  public void setIdAttributeNode(Attr arg0, boolean arg1) throws DOMException
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void removeAllChildren()
+  protected void removeAllChildren()
   {
       for (int i = 0; i < children.size(); i++)
       {
@@ -190,4 +530,72 @@ public class ElementNodeImpl extends NodeImpl implements Element
      children.clear();
   }
 
+  
+  /** Sets the text content associated with this Element. This
+   *  removes all children nodes of this element, and then associates
+   *  the specified text to this node.
+   *  
+   *  <p>Association of the character data to this element is done
+   *  by appending a single internal {@link org.w3c.dom.Text} child node
+   *  to this element.</p>
+   * 
+   */
+  public void setTextContent(String textContent) throws DOMException
+  {
+    if (readOnly) 
+    {
+       throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
+    }
+    removeAllChildren();
+    if (textContent != null && textContent.length() != 0)
+    {
+      appendChild(new TextImpl(ownerDocument,textContent));
+    }
+  }
+
+
+  public String getTextContent() throws DOMException
+  {
+    String v;
+    NodeListImpl nodes = new NodeListImpl();
+    DOMUtilities.getNodeByType(this, Node.TEXT_NODE, nodes);
+    StringBuffer buffer = new StringBuffer(); 
+    for (int i=0; i < nodes.getLength(); i++)
+    {
+      buffer.append(nodes.item(i).getNodeValue());
+    }
+    v = buffer.toString();
+    buffer = null;
+    return v;
+  }
+
+
+  public Object clone() throws CloneNotSupportedException
+  {
+    ElementNodeImpl clonedNode = (ElementNodeImpl) super.clone();
+    if (clonedNode.attributes != null)
+    {
+      clonedNode.attributes.clear();
+      clonedNode.readOnly = false;
+      // Clone each attribute nodes
+      if (attributes != null)
+      {
+        for (int i=0; i < attributes.getLength(); i++)
+        {
+          Attr attr = (Attr) attributes.item(i);
+          Attr clonedAttr = (Attr) attr.cloneNode(true);
+          clonedNode.attributes.setNamedItemNS(clonedAttr);
+        }
+      }
+    }
+    return clonedNode;
+  }
+
+
+  public NamedNodeMap getAttributes()
+  {
+    return attributes;
+  }
+
+  
 }

@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Carl Eric Codere
  */
-public class NodeListImpl extends Vector<Node> implements NodeList
+public class NodeListImpl extends Vector implements NodeList
 {
 
   public NodeListImpl()
@@ -18,20 +18,20 @@ public class NodeListImpl extends Vector<Node> implements NodeList
 
   }
 
-  public NodeListImpl(Collection<? extends Node> c)
+  public NodeListImpl(Collection c)
   {
     super(c);
   }
 
   private static final long serialVersionUID = 14882812107381567L;
 
-  @Override
+  
   public Node item(int index)
   {
     return (Node)get(index);
   }
 
-  @Override
+  
   public int getLength()
   {
     return size();

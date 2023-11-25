@@ -54,7 +54,7 @@ public class XPathGen
       Node itemNode = nodeList.item(i);
       if (original.getNodeName().equals(itemNode.getNodeName()))
       {
-        if (original.isEqualNode(itemNode))
+        if (original.equals(itemNode))
           return count;
         count++;
       }

@@ -28,13 +28,11 @@ public class AttributeNodeImpl extends NodeImpl
     attributes = new DefaultNamedNodeMap();
   }
 
-  @Override
   public NamedNodeMap getAttributes()
   {
     return attributes;
   }
 
-  @Override
   public boolean hasAttributes()
   {
     return attributes.getLength()>0;

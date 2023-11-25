@@ -15,69 +15,61 @@ import org.w3c.dom.Node;
  * @author Carl Eric Codere
  *
  */
-public class DefaultNamedNodeMap extends Hashtable<String, Node> implements NamedNodeMap
+public class DefaultNamedNodeMap extends Hashtable implements NamedNodeMap
 {
   /** Array values cache for item() API call. */
   Node nodes[];
 
 
-  @Override
   public Node getNamedItem(String name)
   {
-    return get(name);
+    return (Node)get(name);
   }
 
-  @Override
   public Node setNamedItem(Node node) throws DOMException
   {
-    Node result = put(node.getNodeName(),node);
-    nodes = values().toArray(new NodeImpl[0]);
+    Node result = (Node)put(node.getNodeName(),node);
+    nodes = (Node[]) values().toArray(new NodeImpl[0]);
     return result;
   }
 
-  @Override
   public Node removeNamedItem(String name) throws DOMException
   {
-    Node result = remove(name);;
-    nodes = values().toArray(new NodeImpl[0]);
+    Node result = (Node)remove(name);;
+    nodes = (Node[]) values().toArray(new NodeImpl[0]);
     return result;
   }
 
-  @Override
   public Node item(int index)
   {
     if (nodes == null)
     {
-      nodes = values().toArray(new NodeImpl[0]);
+      nodes = (Node[]) values().toArray(new NodeImpl[0]);
     }
     return nodes[index];
   }
 
-  @Override
   public int getLength()
   {
     return size();
   }
 
-  @Override
   public Node getNamedItemNS(String namespaceURI, String localName)
   {
-    return get(namespaceURI+localName);
+    return (Node)get(namespaceURI+localName);
   }
 
-  @Override
   public Node setNamedItemNS(Node node) throws DOMException
   {
-    Node result = put(node.getNamespaceURI()+node.getLocalName(),node);
-    nodes = values().toArray(new NodeImpl[0]);
+    Node result = (Node) put(node.getNamespaceURI()+node.getLocalName(),node);
+    nodes = (Node[]) values().toArray(new NodeImpl[0]);
     return result;
   }
 
-  @Override
   public Node removeNamedItemNS(String namespaceURI, String localName) throws DOMException
   {
-    Node result = remove(namespaceURI+localName);;
-    nodes = values().toArray(new NodeImpl[0]);
+    Node result = (Node)remove(namespaceURI+localName);;
+    nodes = (Node[]) values().toArray(new NodeImpl[0]);
     return result;
   }
 

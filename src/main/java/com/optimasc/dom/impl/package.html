@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+
+
+</head>
+
+<body>
+
+<h1>Introduction</h1>
+
+<p>This is a very simple subset of the DOM Level 3 Core specification. Only <code>Document</code>,
+<code>DocumentType</code>, <code>Element</code> and <code>Attr</code> nodes can easily be manipulated. </p>
+
+<h1>Compliance</h1>
+
+<p>All methods required by JSR 287 are implemented and can freely be used, most methods of JSR 280 are implemented (non namespace aware methods of that JSR are not implemented, as they can be emulated by setting the namespaceURI to <code>null</code>). All the Namespace aware versions
+of the different public API's should be used, others are not implemented.</p>
+
+<p>If a method is not implemented, it will raise a <code>DOMException</code> with an error code <code>DOMException.NOT_SUPPORTED_ERR</code>.</p>
+
+<p>The following methods are partially implemented:</p>
+
+<ul>
+ <li><code>setUserData(String, Object, UserDataHandler)</code> will raise an error if the UserDataHandler parameter is not <code>null.</code></li>
+ <li><code>isEqualNode(Node)</code> only does partial comparison for performance reasons, it does not compare the equality of all children nodes.</li> 
+</ul>
+
+<h1>Details</h1>
+
+<p>For this implementation, the supported node types, and which node types they may have as children, are as follows: </p>
+<ul>
+  <li><code>Document</code> -- <code>Element</code> (maximum of one)</li>
+  <li><code>Element</code> -- <code>Element</code>, <code>Text</code> (maximum of one)</li>
+  <li><code>Attr</code> -- no children</li>
+  <li><code>Text</code> -- no children</li>
+</ul>
+
+<p>To follow the specification, the <code>Text</code> node implementation interface is also exposed but only read-only
+as children of <code>Element</code> nodes. These <code>Text</code> nodes are internally created by calling <code>setTextContent</code>
+on the <code>Element</code> nodes, it is not possible to manually and append <code>Text</code> nodes.</p>
+
+
+</body>
+</html>
