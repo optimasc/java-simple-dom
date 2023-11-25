@@ -20,4 +20,4 @@ The following interfaces have been implemented:
 * TypeInfo interface minimally implemented and not really functional
 
 
-Aditionally some DOM conversion utilities outside of the DOM Core specification is also available in the DOMUtilities class as well XPath utilities in the XPathGen class.
+Additionally some DOM conversion utilities outside of the DOM Core specification is also available in the DOMUtilities class as well XPath utilities in the XPathGen class.
