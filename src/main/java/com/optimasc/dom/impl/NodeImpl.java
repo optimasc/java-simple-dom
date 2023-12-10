@@ -161,7 +161,7 @@ public abstract class NodeImpl implements Node, Cloneable
   
   public Object getFeature(String feature, String version)
   {
-    return getOwnerDocument().getFeature(feature, version);
+    return ((DocumentImpl)getOwnerDocument()).getFeature(feature, version);
   }
 
   
