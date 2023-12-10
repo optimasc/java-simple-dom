@@ -304,7 +304,7 @@ public class DOMUtilities
                */
               if (arrayIndex != -1)
               {
-                foundNode.setTextContent(value);
+                foundNode.appendChild(document.createTextNode(value));
               }
               else
               {
@@ -319,7 +319,7 @@ public class DOMUtilities
                 }
                 else
                 {
-                  foundNode.setTextContent(value);
+                  foundNode.appendChild(document.createTextNode(value));
                 }
               }
             }
@@ -352,7 +352,7 @@ public class DOMUtilities
              */
             if (i == (tokenCount - 1))
             {
-              childNode.setTextContent(value);
+              childNode.appendChild(document.createTextNode(value));
             }
           }
         }
@@ -678,6 +678,13 @@ public class DOMUtilities
   }
   
 
+  /** Limitation: If Attr is not of type AttrImpl, only checks
+   *  equality of value of attribute to determine if it matches.
+   * 
+   * @param rootNode
+   * @param id
+   * @return
+   */
   public static Element getElementByID(Node rootNode, String id)
   {
     NodeList nodeList = rootNode.getChildNodes();
@@ -691,10 +698,19 @@ public class DOMUtilities
         NamedNodeMap attrs = currentElement.getAttributes();
         for (int j = 0; j < attrs.getLength(); j++)
         {
-          Attr currentAttribute = (Attr) attrs.item(j);
+          Attr attr = (Attr) attrs.item(j); 
+          if (attr instanceof AttrImpl)
+          {
+            AttrImpl currentAttribute = (AttrImpl) attrs.item(j);
           if ((currentAttribute.isId()) && currentAttribute.getNodeValue().equals(id))
           {
             return currentElement;
+          }
+          } else
+          {
+            // Only check if attribute value is equal
+            if (attr.getNodeValue().equals(id))
+              return currentElement;
           }
         }
         //  calls this method for all the children which is Element
