@@ -121,4 +121,22 @@ public class TextImpl extends NodeImpl implements Text
     }
   }
 
+  /** Throws {@link java.lang.UnsupportedOperationException} */
+  public boolean isElementContentWhitespace()
+  {
+    throw new UnsupportedOperationException("Unsupported operation.");
+  }
+
+  /** Throws {@link java.lang.UnsupportedOperationException} */
+  public String getWholeText()
+  {
+    throw new UnsupportedOperationException("Unsupported operation.");
+  }
+
+  /** Throws {@link java.lang.UnsupportedOperationException} */
+  public Text replaceWholeText(String content) throws DOMException
+  {
+    throw new UnsupportedOperationException("Unsupported operation.");
+  }
+
 }
