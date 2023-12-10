@@ -321,7 +321,7 @@ import org.w3c.dom.NodeList;
  */
 public class ElementNodeImpl extends NodeImpl implements Element
 {
-  protected DefaultNamedNodeMap attributes;
+  protected NamedNodeMap attributes;
 
   
   public ElementNodeImpl(Document owner,String namespaceURI, String qualifiedName)
@@ -374,7 +374,7 @@ public class ElementNodeImpl extends NodeImpl implements Element
     {
        throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
     }
-    if (attributes.contains(oldAttr)==false)
+    if (attributes.getNamedItemNS(oldAttr.getNamespaceURI(),oldAttr.getLocalName())==null)
     {
       throw new DOMException(DOMException.NOT_FOUND_ERR, "Attribute is not found.");
     }
@@ -511,7 +511,7 @@ public class ElementNodeImpl extends NodeImpl implements Element
     {
        throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, "Node is read-only");
     }
-    if (attributes.contains(attr)==false)
+    if (attributes.getNamedItemNS(attr.getNamespaceURI(),attr.getLocalName())==null)
     {
       throw new DOMException(DOMException.NOT_FOUND_ERR, "Attribute is not an attribute of this Node");
     }
@@ -575,9 +575,10 @@ public class ElementNodeImpl extends NodeImpl implements Element
     ElementNodeImpl clonedNode = (ElementNodeImpl) super.clone();
     if (clonedNode.attributes != null)
     {
-      clonedNode.attributes.clear();
+//      clonedNode.attributes.clear(); -- See below
       clonedNode.readOnly = false;
-      // Clone each attribute nodes
+      // Clone each attribute nodes - we overwrite old instances of 
+      // the attributes so they are independent of original node.
       if (attributes != null)
       {
         for (int i=0; i < attributes.getLength(); i++)
