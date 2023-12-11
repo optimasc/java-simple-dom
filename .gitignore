@@ -24,5 +24,4 @@ target/
 .settings/
 .project
 .classpath
-
-
+/target
